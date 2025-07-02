@@ -2,15 +2,14 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_key_pair" "deployer" {
-  key_name   = "my-key"
-  public_key = file("${path.module}/id_rsa.pub")
-}
-
-
 variable "private_key" {
   description = "SSH private key content"
   type        = string
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "my-key"
+  public_key = file("${path.module}/id_rsa.pub")
 }
 
 resource "aws_instance" "web" {
@@ -24,13 +23,13 @@ resource "aws_instance" "web" {
       "sudo amazon-linux-extras install docker -y",
       "sudo service docker start",
       "sudo usermod -a -G docker ec2-user",
-      "docker run -d -p 80:80 ghcr.io/yourusername/yourimage:latest"
+      "docker run -d -p 80:80 imranbashir34011/static-website:latest"
     ]
 
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = file("~/.ssh/id_rsa")
+      private_key = var.private_key
       host        = self.public_ip
     }
   }
