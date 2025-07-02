@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "deployer" {
   key_name   = "my-key"
-  public_key = "~/.ssh/id_rsa" # Make sure key exists
+  public_key = file("~/.ssh/id_rsa") # Make sure key exists
 }
 
 resource "aws_instance" "web" {
