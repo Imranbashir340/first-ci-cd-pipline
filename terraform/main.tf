@@ -4,8 +4,9 @@ provider "aws" {
 
 resource "aws_key_pair" "deployer" {
   key_name   = "my-key"
-  private_key = var.private_key # Make sure key exists
+  public_key = file("${path.module}/id_rsa.pub")
 }
+
 
 variable "private_key" {
   description = "SSH private key content"
